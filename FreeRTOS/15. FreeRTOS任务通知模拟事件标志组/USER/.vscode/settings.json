@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "freertos_demo.h": "c",
+        "malloc.h": "c",
+        "sram.h": "c",
+        "key.h": "c",
+        "list.h": "c",
+        "freertos.h": "c"
+    }
+}
