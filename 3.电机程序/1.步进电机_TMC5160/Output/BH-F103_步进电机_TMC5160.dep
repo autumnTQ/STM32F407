@@ -1,6 +1,6 @@
 Dependencies for Project 'BH-F103', Target '步进电机_TMC5160': (DO NOT MODIFY !)
 CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARMCC
-F (..\..\User\main.c)(0x66541F44)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I ..\..\Libraries\CMSIS -I ..\..\User -I ..\..\Libraries\FWlib\inc -I ..\..\User\Led -I ..\..\User\AdvanceTim -I ..\..\Hardware\KEY -I ..\..\Hardware\TIMER -I ..\..\Hardware\TMC5160 -I ..\..\Hardware\IO_control -I ..\..\Hardware\OLED -I ..\..\Hardware\Delay -I ..\..\Hardware\TLE5012B -I ..\..\Hardware\MODBUS-IF:\Keil5\Keil\STM32F1xx_DFP\2.2.0\Device\Include-D__UVISION_VERSION="536" -DSTM32F10X_MD -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER-o ..\..\output\main.o --omf_browse ..\..\output\main.crf --depend ..\..\output\main.d)
+F (..\..\User\main.c)(0x665592F3)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I ..\..\Libraries\CMSIS -I ..\..\User -I ..\..\Libraries\FWlib\inc -I ..\..\User\Led -I ..\..\User\AdvanceTim -I ..\..\Hardware\KEY -I ..\..\Hardware\TIMER -I ..\..\Hardware\TMC5160 -I ..\..\Hardware\IO_control -I ..\..\Hardware\OLED -I ..\..\Hardware\Delay -I ..\..\Hardware\TLE5012B -I ..\..\Hardware\MODBUS-IF:\Keil5\Keil\STM32F1xx_DFP\2.2.0\Device\Include-D__UVISION_VERSION="536" -DSTM32F10X_MD -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER-o ..\..\output\main.o --omf_browse ..\..\output\main.crf --depend ..\..\output\main.d)
 I (..\..\User\Config.h)(0x66541C86)
 I (..\..\Libraries\CMSIS\stm32f10x.h)(0x6551E2F5)
 I (..\..\Libraries\CMSIS\core_cm3.h)(0x6551E2F5)

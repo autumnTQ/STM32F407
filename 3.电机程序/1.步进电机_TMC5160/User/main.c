@@ -47,7 +47,7 @@ int main(void)
     Delay_MS(100);
     TMC5160_ENCMODE_Set(); // 编码器设置
 
-    TMC5160_xi_fen_set();  // 设置细分
+    TMC5160_xi_fen_set();  // 设置细分  在接收数据修改时，这里需要放到while 循环中
     TMC5160_current_set(); // 设置电流
     TMC5160_JiaSu_Set();   // T型加速设置 设置运行速度、加速度、减速度 
 
