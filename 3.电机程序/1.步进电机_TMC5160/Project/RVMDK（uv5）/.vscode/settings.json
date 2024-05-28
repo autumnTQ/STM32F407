@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "config.h": "c",
+        "TMC5160.C": "cpp",
+        "TLE5012B.C": "cpp"
+    }
+}

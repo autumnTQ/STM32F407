@@ -1,0 +1,15 @@
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'F:\Keil5\ARM\ARMCC\Bin'
+Build target '步进电机_TMC5160'
+compiling bsp_key.c...
+..\..\Hardware\KEY\bsp_key.c(110): warning:  #177-D: variable "key1"  was declared but never referenced
+      static uint8_t key1 = 0;
+..\..\Hardware\KEY\bsp_key.c(111): warning:  #177-D: variable "key2"  was declared but never referenced
+      static uint8_t key2 = 0;
+..\..\Hardware\KEY\bsp_key.c(112): warning:  #177-D: variable "key3"  was declared but never referenced
+      static uint8_t key3 = 0;
+..\..\Hardware\KEY\bsp_key.c: 3 warnings, 0 errors
+linking...
+Program Size: Code=10892 RO-data=268 RW-data=92 ZI-data=1284  
+FromELF: creating hex file...
+"..\..\Output\步进电机_TMC5160.axf" - 0 Error(s), 3 Warning(s).
+Build Time Elapsed:  00:00:00
