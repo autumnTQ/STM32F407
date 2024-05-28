@@ -1,5 +1,6 @@
 # 忽略‘OBJ’文件和‘OBJ’文件目录
 OBJ/
+Output/
 
 # 忽略指定文件
 # HelloWrold.class
