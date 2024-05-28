@@ -270,6 +270,7 @@ void SerialRxRroc_Task(void *pvParameters)
 
                             tpype = LevelDet;
                             tpype = LevelDet;
+                            tpype = LevelDet;  //增加测试
                         }
                         else  //运行目标位置  增加注释
                         {
