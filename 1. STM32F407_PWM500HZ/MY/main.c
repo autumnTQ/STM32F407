@@ -31,9 +31,9 @@ int main(void)
             compare += 20;
             PWM_SetCompare1(compare);
 
-            if (compare >= 200)
+            if (compare >= 200)  //测试添加注释
             {
-                compare = 0;
+                compare = 0;     //修改占空比
             }
         }            
 	}
