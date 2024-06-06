@@ -1,9 +1,14 @@
-#include "Config.h"
+
+#include "bsp_key.h"
 
 KEY_STATE KeyState = KEY_CHECK;
 KEY_TYPE g_KeyActionFlag = NULL_KEY;
 KEY_VALUE g_Key = KEY_NULL;
 extern uint32_t motor_step;
+
+extern uint32_t encoder_step; // 读取电机当前位置
+extern _pid pid;
+extern int pid_status;
 
 // 按键初始化
 void Key_Init()
@@ -49,28 +54,14 @@ void Key_State()
     {
         if (g_KeyActionFlag == SHORT_KEY)
         {
-            uint16_t a_value;
-            
-            
-            //配置S BIST = 0;    写数据 0 1010 0 001111 0001->0x50F1   0x0000
-            WriteValue(0x50F1,0x0000);
-            Delay_MS(50);
-            //配置AS_RST=1       写数据 0 0000 0 000001 0001->0x0011   0x5AFF   
-            WriteValue(0x0011,0x5AFF);
-            Delay_MS(50);
-            //配置ANG_BASE       写数据 0 1010 0 001001 0001->0x5091   0x0000
-            WriteValue(0x5091,0x0000);
-            Delay_MS(50);
-
-            
             g_KeyActionFlag = NULL_KEY;
             g_Key = KEY_NULL;
         }
         else if (g_KeyActionFlag == LONG_KEY)
         {
-//            __set_FAULTMASK(1);//禁止所有的可屏蔽中断
-//            NVIC_SystemReset();//软件复位
-            
+            //            __set_FAULTMASK(1);//禁止所有的可屏蔽中断
+            //            NVIC_SystemReset();//软件复位
+
             g_KeyActionFlag = NULL_KEY;
             g_Key = KEY_NULL;
         }
@@ -80,8 +71,11 @@ void Key_State()
     case KEY_Jia_UP:
     {
         if (g_KeyActionFlag == SHORT_KEY)
-        {                        
-            XTARGET += sys_param_1[8]; //电机运行目标位置
+        {
+            pid.target_val += sys_param_1[8];
+            XTARGET = pid.target_val; // 电机运行目标位置
+
+//            XTARGET += sys_param_1[8];  //电机运行目标位置
 
             g_KeyActionFlag = NULL_KEY;
             g_Key = KEY_NULL;
@@ -98,8 +92,11 @@ void Key_State()
     {
         if (g_KeyActionFlag == SHORT_KEY)
         {
-            XTARGET -= sys_param_1[8];  //电机运行目标位置
-            
+            pid.target_val -= sys_param_1[8];
+            XTARGET = pid.target_val; // 电机运行目标位置
+
+//            XTARGET -= sys_param_1[8]; // 电机运行目标位置
+
             g_KeyActionFlag = NULL_KEY;
             g_Key = KEY_NULL;
         }

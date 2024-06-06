@@ -3,10 +3,9 @@
 
 #include "stm32f10x.h"
 
-
-
 extern void Delay_MS(unsigned int TimeMS);
 extern void Delay_US(unsigned int TimeUS);
+extern uint16_t STATUS;
 
 uint32_t TMC5160_SPIWriteInt(uint8_t add, long write_data);
 
@@ -21,5 +20,11 @@ void  TMC5160_ENCMODE_Set(void) ;//编码器设置
 
 void TMC5160_Regest_Init_Test(void);
 uint32_t TMC5160_SPIReadInt(uint8_t add, long write_data);
+void zero_target(void);
+void Move(long PosiTionData); // 移动数据
+
+void mmymian(long PositionData);
+
+
 #endif 
 

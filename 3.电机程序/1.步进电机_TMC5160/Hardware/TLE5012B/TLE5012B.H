@@ -37,7 +37,11 @@
 #define MOD4_VALUE 0x0098       // 9bit 512
 #define WRITE_IFAB_VALUE 0x50B1
 #define IFAB_VALUE 0x000D
-  
+
+
+
+
+
 /* Functionality mode */
 #define REFERESH_ANGLE 0
 
@@ -53,6 +57,6 @@ uint16_t SPIx_ReadWriteByte(uint16_t byte);
 uint16_t TlE5012W_Reg(uint16_t Reg_CMD, uint16_t Reg_Data);
 
 uint16_t WriteValue(uint16_t u16RegValue, uint16_t u16RegValue_1);
-
+void  TLE5012B_Regest_Init(void);
 
 #endif

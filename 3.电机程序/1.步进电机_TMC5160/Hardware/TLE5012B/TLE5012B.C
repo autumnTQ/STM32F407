@@ -119,12 +119,12 @@ uint16_t ReadValue(uint16_t u16RegValue)
 {
 	uint16_t u16Data;
 
-	SPI_CS_ENABLE;     // 控制MOSI--PB15的输出类型为开漏或推挽。发送命令时设置MOSI为推挽输出，接收数据时设置MOSI为开漏，以实现正常通信。
-					  
-					   //   MCU向TLE5012B发送命令时 MCU的数据接收引脚MISO引脚拉高 。当TLE5012B向MCU传输数据时，MCU的接收命令时MOSI引脚拉高         
+	SPI_CS_ENABLE; // 控制MOSI--PB15的输出类型为开漏或推挽。发送命令时设置MOSI为推挽输出，接收数据时设置MOSI为开漏，以实现正常通信。
+
+	//   MCU向TLE5012B发送命令时 MCU的数据接收引脚MISO引脚拉高 。当TLE5012B向MCU传输数据时，MCU的接收命令时MOSI引脚拉高
 	SPIx_ReadWriteByte(u16RegValue);
 	SPI_TX_OFF;
-    Delay_US(100);
+	Delay_US(100);
 	u16Data = SPIx_ReadWriteByte(0xffff);
 	SPI_CS_DISABLE;
 	SPI_TX_ON;
@@ -147,8 +147,8 @@ uint16_t WriteValue(uint16_t u16RegValue, uint16_t u16RegValue_1)
 	SPIx_ReadWriteByte(u16RegValue_1);
 
 	SPI_TX_OFF;
-    
-    Delay_US(100);
+
+	Delay_US(100);
 	u16Data = SPIx_ReadWriteByte(0xffff);
 
 	SPI_CS_DISABLE;
@@ -171,7 +171,7 @@ void ReadAngle(void)
 
 	//-------采集角度--------------------
 	a_value = ReadValue(READ_ANGLE_VALUE);
-//	a_value = ReadValue(0x8421);
+	//	a_value = ReadValue(0x8421);
 	a_value &= 0x7FFF; // 去掉状态位
 	a_value <<= 1;	   //
 	f = a_value;
@@ -180,3 +180,24 @@ void ReadAngle(void)
 
 	TLE5012B_Aangle = a;
 }
+
+void TLE5012B_Regest_Init(void)
+{
+	// 原理图上IFC(CLK) 引脚上有上拉电阻 --> 选择增量式接口
+
+	WriteValue(WRITE_MOD3_VALUE, 0X01); // 配置IIF IFA/IFB/IFC： 强力驱动器， DATA： 强力驱动器， 慢速边缘
+	Delay_US(500);
+	WriteValue(WRITE_MOD4_VALUE, 0X0000); // 配置IIF  配置增量式接口模式： IIF分辨率
+                                   
+	Delay_US(500);
+	// 配置S BIST = 0;    写数据 0 1010 0 001111 0001->0x50F1   0x0000 启用启动BIST
+	WriteValue(0x50F1, 0x0010);
+	Delay_US(500);
+    
+    //激活HW复位
+	// 配置AS_RST=1       写数据 0 0000 0 000001 0001->0x0011   0x5AFF
+	WriteValue(0x0011, 0x5AFF);
+	Delay_US(500);
+}
+
+

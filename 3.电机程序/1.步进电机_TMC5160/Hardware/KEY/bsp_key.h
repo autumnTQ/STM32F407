@@ -2,6 +2,7 @@
 #define __BSP_KEY_H
 
 #include "stm32f10x.h"
+#include "Config.h"
 
 #define KEY_Ok GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_7)
 #define KEY_Jia GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_6)

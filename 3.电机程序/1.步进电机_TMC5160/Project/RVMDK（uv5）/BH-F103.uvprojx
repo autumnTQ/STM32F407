@@ -134,11 +134,11 @@
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
-            <DriverSelection>4099</DriverSelection>
+            <DriverSelection>4096</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD, USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Libraries\CMSIS;..\..\User;..\..\Libraries\FWlib\inc;..\..\User\Led;..\..\User\AdvanceTim;..\..\Hardware\KEY;..\..\Hardware\TIMER;..\..\Hardware\TMC5160;..\..\Hardware\IO_control;..\..\Hardware\OLED;..\..\Hardware\Delay;..\..\Hardware\TLE5012B;..\..\Hardware\MODBUS</IncludePath>
+              <IncludePath>..\..\Libraries\CMSIS;..\..\User;..\..\Libraries\FWlib\inc;..\..\User\Led;..\..\User\AdvanceTim;..\..\Hardware\KEY;..\..\Hardware\TIMER;..\..\Hardware\TMC5160;..\..\Hardware\IO_control;..\..\Hardware\OLED;..\..\Hardware\Delay;..\..\Hardware\TLE5012B;..\..\Hardware\MODBUS;..\..\Hardware\pid</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -462,6 +462,11 @@
               <FileName>modbus.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Hardware\MODBUS\modbus.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_pid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Hardware\pid\bsp_pid.c</FilePath>
             </File>
           </Files>
         </Group>
