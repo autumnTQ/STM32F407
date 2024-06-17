@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD, USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Libraries\CMSIS;..\..\User;..\..\Libraries\FWlib\inc;..\..\User\Led;..\..\User\AdvanceTim;..\..\Hardware\KEY;..\..\Hardware\TIMER;..\..\Hardware\TMC5160;..\..\Hardware\IO_control;..\..\Hardware\OLED;..\..\Hardware\Delay;..\..\Hardware\TLE5012B;..\..\Hardware\MODBUS;..\..\Hardware\pid</IncludePath>
+              <IncludePath>..\..\Libraries\CMSIS;..\..\User;..\..\Libraries\FWlib\inc;..\..\User\Led;..\..\User\AdvanceTim;..\..\Hardware\KEY;..\..\Hardware\TIMER;..\..\Hardware\TMC5160;..\..\Hardware\IO_control;..\..\Hardware\OLED;..\..\Hardware\Delay;..\..\Hardware\TLE5012B;..\..\Hardware\MODBUS;..\..\Hardware\pid;..\..\Test\protocol;..\..\Test\usart;..\..\Test\stepper</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -637,6 +637,26 @@
               <FileName>readme.txt</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Doc\readme.txt</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>TEST</GroupName>
+          <Files>
+            <File>
+              <FileName>protocol.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Test\protocol\protocol.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_debug_usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Test\usart\bsp_debug_usart.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_stepper_ctrl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Test\stepper\bsp_stepper_ctrl.c</FilePath>
             </File>
           </Files>
         </Group>

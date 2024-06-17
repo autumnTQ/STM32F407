@@ -59,8 +59,8 @@ void Key_State()
         }
         else if (g_KeyActionFlag == LONG_KEY)
         {
-            //            __set_FAULTMASK(1);//禁止所有的可屏蔽中断
-            //            NVIC_SystemReset();//软件复位
+            //                       __set_FAULTMASK(1);//禁止所有的可屏蔽中断
+            //                       NVIC_SystemReset();//软件复位
 
             g_KeyActionFlag = NULL_KEY;
             g_Key = KEY_NULL;
@@ -72,11 +72,10 @@ void Key_State()
     {
         if (g_KeyActionFlag == SHORT_KEY)
         {
-            pid.target_val += sys_param_1[8];
-            XTARGET = pid.target_val; // 电机运行目标位置
+//            XTARGET += sys_param_1[8]; // 电机运行目标位置
+//            pid.target_val = XTARGET;
 
-//            XTARGET += sys_param_1[8];  //电机运行目标位置
-
+            pid.target_val += sys_param_1[8]; // 电机运行目标位置
             g_KeyActionFlag = NULL_KEY;
             g_Key = KEY_NULL;
         }
@@ -92,11 +91,11 @@ void Key_State()
     {
         if (g_KeyActionFlag == SHORT_KEY)
         {
-            pid.target_val -= sys_param_1[8];
-            XTARGET = pid.target_val; // 电机运行目标位置
-
 //            XTARGET -= sys_param_1[8]; // 电机运行目标位置
-
+//            pid.target_val = XTARGET;
+            
+            pid.target_val -= sys_param_1[8]; // 电机运行目标位置
+            
             g_KeyActionFlag = NULL_KEY;
             g_Key = KEY_NULL;
         }

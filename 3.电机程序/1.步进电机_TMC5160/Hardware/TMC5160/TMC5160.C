@@ -163,7 +163,7 @@ void TMC5160_Regest_Init(void)
 {
 	//---------------------------
 	// 使能 stealthChop 电压 PWM 模式 mode (取决于速度阈值
-	TMC5160_SPIWriteInt(0x00, 0x00000004);  // writing value 0x0000000C = 12 = 0.0 to address 0 = 0x00(GCONF)
+	TMC5160_SPIWriteInt(0x00, 0x00000004); // writing value 0x0000000C = 12 = 0.0 to address 0 = 0x00(GCONF)
 	TMC5160_SPIWriteInt(0x03, 0x00000000); // writing value 0x00000000 = 0 = 0.0 to address 1 = 0x03(SLAVECONF)
 	TMC5160_SPIWriteInt(0x05, 0x00000000); // writing value 0x00000000 = 0 = 0.0 to address 2 = 0x05(X_COMPARE)
 	TMC5160_SPIWriteInt(0x06, 0x00000000); // writing value 0x00000000 = 0 = 0.0 to address 3 = 0x06(OTP_PROG)
@@ -230,10 +230,13 @@ void TMC5160_Regest_Init(void)
  *******************************************************************************/
 void TMC5160_current_set(void)
 {
-	u16 IRUN_current = 10; // 驱动电流
-	u16 IHOLD_current = 3; // 保持电流
+	uint16_t IRUN_current = 0;	// 运行电流
+	uint16_t IHOLD_current = 0; // 静止状态下电机电流
 	uint32_t current = 0;
-	IRUN_current = sys_param_1[9]; // 电机驱动电流
+
+	IRUN_current = sys_param_1[9];
+	IHOLD_current = sys_param_1[10];
+
 	if (leat_driver_current != IRUN_current)
 	{
 		leat_driver_current = IRUN_current;
@@ -333,25 +336,20 @@ void TMC5160_JiaSu_Set(void) // T型加速设置
 	static uint32_t leat_VMAX = 0; // 速度
 	static uint32_t leat_DMAX = 0; // 速度
 
-	long AMAX = 0;
-	long VMAX = 0;
-	long DMAX = 0;
-	AMAX = sys_param_1[6];
-	AMAX *= 10;
-	DMAX = AMAX;
+	long VMAX = sys_param_1[5]; // 运行速度
+	long AMAX = sys_param_1[6]; // 加速度
+	long DMAX = sys_param_1[7]; // 减速度
 
-	VMAX = sys_param_1[7];
-	VMAX *= 10;
 	if (leat_AMAX != AMAX)
 	{
 		leat_AMAX = AMAX;
-		TMC5160_SPIWriteInt(0x26, AMAX); //
-		TMC5160_SPIWriteInt(0x28, DMAX); //
+		TMC5160_SPIWriteInt(0x26, AMAX); // 加速度
+		TMC5160_SPIWriteInt(0x28, DMAX); // 减速度
 	}
 	if (leat_VMAX != VMAX)
 	{
 		leat_VMAX = VMAX;
-		TMC5160_SPIWriteInt(0x27, VMAX); //
+		TMC5160_SPIWriteInt(0x27, VMAX); // 运行速度
 	}
 }
 /*******************************************************************************
@@ -441,9 +439,9 @@ void TMC5160_ENCMODE_Set(void) // 编码器设置
 	value = (ZhengSu << 16) + e * 10000;
 	// value=(ZhengSu<<16)+e*65536;
 	TMC5160_SPIWriteInt(0x3A, value); // 设置编码器因子
-	
+
 	// TMC5160_SPIWriteInt(0x38, 0x00000604); // 配置编码器寄存器 writing value 0x00000000 = 0 = 0.0 to address 27 = 0x38(ENCMODE)
-	TMC5160_SPIWriteInt(0x39, 0);    // 编码器计数值清理
+	TMC5160_SPIWriteInt(0x39, 0); // 编码器计数值清理
 }
 /*******************************************************************************
  * 函数名       :
@@ -520,22 +518,21 @@ void TMC5160_Regest_Init_Test(void)
 	TMC5160_SPIWriteInt(0x6C, 0x000100C3); // PAGE46:CHOPCONF: TOFF=3, HSTRT=4, HEND=1, TBL=2, CHM=0 (spreadcycle)
 	TMC5160_SPIWriteInt(0x6D, 0x0100E313); // PAGE48:
 	TMC5160_SPIWriteInt(0x0A, 0x00180710); // PAGE30:死区时间10：200nS，BBMCLKS：7，驱动电流19、18BIT：10，滤波时间21、20BIT：01：200nS
-	TMC5160_SPIWriteInt(0x90, 0x00061f0a);
 	TMC5160_SPIWriteInt(0x10, 0x00061406); // PAGE33:IHOLD_IRUN: IHOLD=06(默认10), IRUN=20 (31max.current), IHOLDDELAY=6
 	TMC5160_SPIWriteInt(0x11, 0x0000000A); // PAGE33:TPOWERDOWN=10:电机静止到电流减小之间的延时
 	TMC5160_SPIWriteInt(0x00, 0x00000004); // PAGE27:EN_PWM_MODE=1，使能STEALTHCHOP
 	TMC5160_SPIWriteInt(0x70, 0x000C0000); // PAGE43:PWMCONF--STEALTHCHOP:
 	TMC5160_SPIWriteInt(0x13, 0x000001F4); // PAGE33:TPWM_THRS=500,对应切换速度35000=ca.30RPM
 
-	//加减速设置
-	TMC5160_SPIWriteInt(0x24, 10000);	 // PAGE35:A1=1000 第一阶段加速度
-	TMC5160_SPIWriteInt(0x25, 500000);	 // PAGE35:V1=50000加速度阀值速度V1
-	TMC5160_SPIWriteInt(0x26, 5000);	 // PAGE35:AMAX=500大于V1的加速度
-	TMC5160_SPIWriteInt(0x27, 20000000); // PAGE35:VMAX=200000
-	TMC5160_SPIWriteInt(0x28, 7000);	 // PAGE35:DMAX=700大于V1的减速度
-	TMC5160_SPIWriteInt(0x2A, 14000);	 // PAGE35:D1=1400小于V1的减速度
-	TMC5160_SPIWriteInt(0x2B, 100);		 // PAGE35:VSTOP=10停止速度，接近于0
-	//位置模式
+	// 加减速设置
+	TMC5160_SPIWriteInt(0x24, 1000);	// PAGE35:A1=1000 第一阶段加速度
+	TMC5160_SPIWriteInt(0x25, 50000);	// PAGE35:V1=50000加速度阀值速度V1
+	TMC5160_SPIWriteInt(0x26, 500);		// PAGE35:AMAX=500大于V1的加速度
+	TMC5160_SPIWriteInt(0x27, 2000000); // PAGE35:VMAX=200000
+	TMC5160_SPIWriteInt(0x28, 700);		// PAGE35:DMAX=700大于V1的减速度
+	TMC5160_SPIWriteInt(0x2A, 1400);	// PAGE35:D1=1400小于V1的减速度
+	TMC5160_SPIWriteInt(0x2B, 10);		// PAGE35:VSTOP=10停止速度，接近于0
+	// 位置模式
 	TMC5160_SPIWriteInt(0x20, 0); // PAGE35:RAMPMODE=0位置模式，使用所有A、V、D参数
 	// 编码器配置
 	TMC5160_SPIWriteInt(0x38, 0x00000404);			// PAGE40：ENCMODE（RW）编码器配置和N通道使用：

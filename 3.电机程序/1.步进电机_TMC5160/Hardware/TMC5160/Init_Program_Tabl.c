@@ -13,14 +13,14 @@ void Init_program_table(void) // 初始化配置参数
     sys_param_1[0] = 0;    // 备用
     sys_param_1[1] = 1;    // 通讯地址 0-255
     sys_param_1[2] = 9600; // 通讯波特率  0：4800，1：9600，2:19200，3：115200
-    sys_param_1[3] = 4;   // 驱动细分
+    sys_param_1[3] = 1;    // 驱动细分
     sys_param_1[4] = 18;   // 电机转角 18=1.8°
-    sys_param_1[5] = 50;   // 加速速度
-    sys_param_1[6] = 80;  // 加速度
-    sys_param_1[7] = 100;   // 运行速度
-    sys_param_1[8] = 1600;   // 按键点动脉冲数
-    sys_param_1[9] = 5;   // 电机驱动电流
-    sys_param_1[10] = 0;   //
+    sys_param_1[5] = 500;  // 运行速度
+    sys_param_1[6] = 200;  // 加速度
+    sys_param_1[7] = 200;  // 减速度
+    sys_param_1[8] = 200;  // 按键点动脉冲数
+    sys_param_1[9] = 6;    // 电机运行电流
+    sys_param_1[10] = 2;   // 静止状态下电机电流
     sys_param_1[11] = 0;   //
     sys_param_1[12] = 0;   //
     sys_param_1[13] = 0;   //
@@ -95,4 +95,3 @@ void Init_program_table(void) // 初始化配置参数
     sys_param_1[124] = 0; // VSENSE
     sys_param_1[125] = 0; // RDSEL1-0
 }
-

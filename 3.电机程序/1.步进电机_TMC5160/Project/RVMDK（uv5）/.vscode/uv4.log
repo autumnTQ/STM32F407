@@ -1,29 +1,11 @@
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'F:\Keil5\ARM\ARMCC\Bin'
 Build target '步进电机_TMC5160'
-compiling TMC5160.C...
-..\..\Hardware\TMC5160\TMC5160.C(98): warning:  #177-D: variable "x"  was declared but never referenced
-  	uint8_t x[5] = {0};
-..\..\Hardware\TMC5160\TMC5160.C(127): warning:  #177-D: variable "x"  was declared but never referenced
-  	uint8_t x[5] = {0};
-..\..\Hardware\TMC5160\TMC5160.C(331): warning:  #177-D: variable "leat_A1"  was declared but never referenced
-  	static uint32_t leat_A1 = 0;   // 加速度
-..\..\Hardware\TMC5160\TMC5160.C(334): warning:  #177-D: variable "leat_DMAX"  was declared but never referenced
-  	static uint32_t leat_DMAX = 0; // 速度
-..\..\Hardware\TMC5160\TMC5160.C(508): error:  #20: identifier "leat_sys_param_24" is undefined
-  		if(leat_sys_param_24!=sys_param_1[24])
-..\..\Hardware\TMC5160\TMC5160.C: 4 warnings, 1 error
-compiling main.c...
-..\..\User\main.c(94): warning:  #167-D: argument of type "char *" is incompatible with parameter of type "u8 *"
-              OLED_ShowString(70, 2, &Display_String[0], 16);
-..\..\User\main.c: 1 warning, 0 errors
-compiling TLE5012B.C...
-..\..\Hardware\TLE5012B\TLE5012B.C(166): warning:  #177-D: variable "n"  was declared but never referenced
-  	static u16 n = 0;
-..\..\Hardware\TLE5012B\TLE5012B.C(167): warning:  #177-D: variable "last_value"  was declared but never referenced
-  	static u32 last_value = 0; // 上次的角度
-..\..\Hardware\TLE5012B\TLE5012B.C(170): warning:  #177-D: variable "f1"  was declared but never referenced
-  	float f = 0.0, f1 = 0.0;
-..\..\Hardware\TLE5012B\TLE5012B.C: 3 warnings, 0 errors
-"..\..\Output\步进电机_TMC5160.axf" - 1 Error(s), 8 Warning(s).
-Target not created.
-Build Time Elapsed:  00:00:00
+compiling protocol.c...
+..\..\Test\protocol\protocol.c(345): warning:  #177-D: variable "temp"  was declared but never referenced
+              uint32_t temp = COMPOUND_32BIT(&frame_data[13]); // 周期数
+..\..\Test\protocol\protocol.c: 1 warning, 0 errors
+linking...
+Program Size: Code=23926 RO-data=2854 RW-data=1088 ZI-data=2288  
+FromELF: creating hex file...
+"..\..\Output\步进电机_TMC5160.axf" - 0 Error(s), 1 Warning(s).
+Build Time Elapsed:  00:00:01

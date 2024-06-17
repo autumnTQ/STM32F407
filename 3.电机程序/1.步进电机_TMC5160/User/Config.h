@@ -26,5 +26,9 @@
 #include "TLE5012B.h"
 #include "modbus.h"
 #include "bsp_pid.h"
+#include "bsp_stepper_ctrl.h"
+#include "protocol.h"
+#include "bsp_debug_usart.h"
+
 
 #endif

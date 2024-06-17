@@ -27,7 +27,7 @@ unsigned char Bit_BianLiang[32]; // 32个位变量
  * @输出参数   无
  * @返回参数   无
  *****************************************************************************/
-void USART1_Init(uint16_t btl)
+void USART1_Init(uint32_t btl)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
@@ -67,8 +67,8 @@ void USART1_Init(uint16_t btl)
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
-	USART_ITConfig(USART1, USART_IT_TC, ENABLE);   // 打开串口1的传输完成中断
-	USART_ITConfig(USART1, USART_IT_TXE, DISABLE); // 打开串口1的发送中断
+	// USART_ITConfig(USART1, USART_IT_TC, ENABLE);   // 打开串口1的传输完成中断
+	// USART_ITConfig(USART1, USART_IT_TXE, DISABLE); // 打开串口1的发送中断
 	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE); // 打开串口1接收中断
 	USART_Cmd(USART1, ENABLE);					   // 打开串口1
 }
@@ -449,7 +449,7 @@ void checkComm0Modbus(void) // 查询UART数据
 		switch (receBuf[1]) // modbus功能
 		{
 		case 1: // 读取线圈状态(读取点 16位以内)
-		case 3:  // 读取保持寄存器(一个或多个)
+		case 3: // 读取保持寄存器(一个或多个)
 		case 5: // 强制单个线圈
 		case 6:
 		{ // 设置单个寄存器
@@ -708,10 +708,7 @@ void USART1_IRQHandler(void)
 	Status = USART_GetITStatus(USART1, USART_IT_TXE);	// 发送数据寄存器空中断
 	Status1 = USART_GetITStatus(USART1, USART_IT_TC);	// 发送数据完成中断
 	Status2 = USART_GetITStatus(USART1, USART_IT_RXNE); // 接收数据寄存器非空中断
-	Status3 = USART_GetITStatus(USART1, USART_IT_ORE);	// 接收溢出错误
 	Status4 = USART_GetITStatus(USART1, USART_IT_IDLE); // 总线空闲标志
-	Status5 = USART_GetITStatus(USART1, USART_IT_FE);	// 帧错误标志
-	Status6 = USART_GetITStatus(USART1, USART_IT_PE);	// 奇偶错误标志
 	if (Status == SET)									// 发送寄存器空中断
 	{
 		USART_ClearFlag(USART1, USART_FLAG_TXE);
@@ -721,93 +718,94 @@ void USART1_IRQHandler(void)
 	if (Status1 == SET) // 发送完成中断
 	{
 		USART_ClearFlag(USART1, USART_FLAG_TC);
-		if (sendPosi < sendCount - 1)
-		{
-			sendPosi++;
-			t = sendBuf[sendPosi];
-			USART_SendData(USART1, t); // 发送一个字节
-		}
-		else
-		{
-			receCount = 0; // 清接收地址偏移寄存器
-			checkoutError = 0;
-			b485Send(0); // 发送完成后将485设为接收
-		}
+		USART_ClearITPendingBit(USART1, USART_IT_TC);
+
+		// if (sendPosi < sendCount - 1)
+		// {
+		// 	sendPosi++;
+		// 	t = sendBuf[sendPosi];
+		// 	USART_SendData(USART1, t); // 发送一个字节
+		// }
+		// else
+		// {
+		// 	receCount = 0; // 清接收地址偏移寄存器
+		// 	checkoutError = 0;
+		// 	b485Send(0); // 发送完成后将485设为接收
+		// }
 	}
 	//-----------------------------------//
 	if (Status2 == SET) // 接收数据寄存器非空中断
 	{
-		USART_ClearFlag(USART1, USART_FLAG_RXNE);
-		USART_ClearITPendingBit(USART1, USART_IT_RXNE);
-		RxData = USART_ReceiveData(USART1); //
-		switch (baudRate_Selection)			// 根据波特率选择超时时间
+
+		uint8_t Res;
+		if (USART_GetITStatus(USART1, USART_IT_RXNE) != RESET) // 接收中断(接收到的数据必须是0x0d 0x0a结尾)
 		{
-		case 0:
-		{				  // 4800
-			TimeOut = 80; // ms
-			break;
+			Res = USART_ReceiveData(USART1); // 读取接收到的数据
+
+			//USART_SendData(USART1, Res);
+			protocol_data_recv(&Res, 1);
 		}
-		case 1:
-		{				  // 9600
-			TimeOut = 40; // ms
-			break;
-		}
-		case 2:
-		{				  // 19200
-			TimeOut = 20; // ms
-			break;
-		}
-		case 3:
-		{				 // 115200
-			TimeOut = 4; // ms
-			break;
-		}
-		default:
-		{
-			TimeOut = 80; // ms
-			break;
-		}
-		}
-		if (receTimeOut > TimeOut) // 接收超时1个单位是 100us
-		{
-			receCount = 0;	 /* buffer overflow */
-			receTimeOut = 0; //
-			TIM_Cmd(TIM2, DISABLE);
-			TIM_SetCounter(TIM2, 0x0000);
-			TIM_Cmd(TIM2, ENABLE);
-		}
-		else
-		{
-			receTimeOut = 0; //
-		}
-		receBuf[receCount] = RxData;
-		receCount++;
-		if (receCount == BUFSIZE) // 接收最大数据个数
-		{
-			receCount = 0; /* buffer overflow */
-		}
-		UARTU1_RX_bit = 1; // UARTU接收数据查询标志位
-						   // checkComm0Modbus();	//查询UART数据
+
+		// MODBUS接收中断
+		// USART_ClearFlag(USART1, USART_FLAG_RXNE);
+		// USART_ClearITPendingBit(USART1, USART_IT_RXNE);
+		// RxData = USART_ReceiveData(USART1); //
+
+		// protocol_data_recv((uint8_t *)&RxData, 1); // 野火调试PID参数
+
+		// switch (baudRate_Selection) // 根据波特率选择超时时间
+		// {
+		// case 0:
+		// {				  // 4800
+		// 	TimeOut = 80; // ms
+		// 	break;
+		// }
+		// case 1:
+		// {				  // 9600
+		// 	TimeOut = 40; // ms
+		// 	break;
+		// }
+		// case 2:
+		// {				  // 19200
+		// 	TimeOut = 20; // ms
+		// 	break;
+		// }
+		// case 3:
+		// {				 // 115200
+		// 	TimeOut = 4; // ms
+		// 	break;
+		// }
+		// default:
+		// {
+		// 	TimeOut = 80; // ms
+		// 	break;
+		// }
+		// }
+		// if (receTimeOut > TimeOut) // 接收超时1个单位是 100us
+		// {
+		// 	receCount = 0;	 /* buffer overflow */
+		// 	receTimeOut = 0; //
+		// 	TIM_Cmd(TIM2, DISABLE);
+		// 	TIM_SetCounter(TIM2, 0x0000);
+		// 	TIM_Cmd(TIM2, ENABLE);
+		// }
+		// else
+		// {
+		// 	receTimeOut = 0; //
+		// }
+		// receBuf[receCount] = RxData;
+		// receCount++;
+		// if (receCount == BUFSIZE) // 接收最大数据个数
+		// {
+		// 	receCount = 0; /* buffer overflow */
+		// }
+		// UARTU1_RX_bit = 1; // UARTU接收数据查询标志位
+		// 				   // checkComm0Modbus();	//查询UART数据
 	}
 	//---------------------------------------//
-	if (Status3 == SET) // 溢出错误
-	{
-		USART_ClearFlag(USART1, USART_FLAG_ORE);
-		USART_ClearITPendingBit(USART1, USART_IT_ORE);
-	}
 	if (Status4 == SET) // 总线空闲标志
 	{
 		USART_ClearFlag(USART1, USART_FLAG_IDLE);
 		USART_ClearITPendingBit(USART1, USART_IT_IDLE);
-	}
-	if (Status5 == SET) // 帧错误标志
-	{
-		USART_ClearFlag(USART1, USART_FLAG_FE);
-		USART_ClearITPendingBit(USART1, USART_IT_FE);
-	}
-	if (Status6 == SET) // 奇偶错误标志
-	{
-		USART_ClearFlag(USART1, USART_FLAG_PE);
-		USART_ClearITPendingBit(USART1, USART_IT_PE);
 	}
 }

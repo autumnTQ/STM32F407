@@ -23,7 +23,7 @@ extern uint16_t baudRate_Selection;//波特率选择
 extern void beginSend(void);//开始发送
 extern void b485Send(uint8_t n);//使能485接收发送
 
-void USART1_Init(uint16_t btl);
+void USART1_Init(uint32_t btl);
 void checkComm0Modbus(void);
 void readCoil(void);
 void readRegisters(void);
