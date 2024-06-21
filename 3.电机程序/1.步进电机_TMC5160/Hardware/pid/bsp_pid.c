@@ -30,9 +30,9 @@ void PID_param_init()
     pid.err = 0.0;
     pid.err_last = 0.0;
     pid.err_next = 0.0;
-    pid.Kp = 1.1;
-    pid.Ki = 0;
-    pid.Kd = 0;
+    pid.Kp = 25;
+    pid.Ki = 6;
+    pid.Kd = 15;
 
 #if PID_ASSISTANT_EN
     float pid_temp[3] = {pid.Kp, pid.Ki, pid.Kd};

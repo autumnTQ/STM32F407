@@ -105,15 +105,15 @@ void Stepper_Speed_Ctrl(void)
     __IO float timer_delay = 0.0f;
      static int16_t target_err = 0;
 
-    TMC5160_SPIReadInt(0x39, 0x00000000); // 读取编码器的计数值，同样需要读二次 此处因为循环中
+    TMC5160_SPIReadInt(0x39, 0x00000000); // 读取编码器的计数值，需要读二次才能读出寄存器的值
     capture_count = TMC5160_SPIReadInt(0x39, 0x00000000);
   
     encoder_step = capture_count;
-    target_err = pid.target_val  - capture_count;   //目标值—编码器值
+    target_err = pid.target_val  - capture_count;   //目标值—编码器值  电机的目标位置与实际位置的差值
     target_err = abs(target_err);  // 计算其绝对值
  
     /* 当电机运动时才启动pid计算 */
-   if (target_err >= 10)
+   if (target_err >= 30)
    {
         /* 第一步 --> 计算当前编码器脉冲总数 */
         // 当前脉冲总计数值 = 当前定时器的计数值 + （定时器的溢出次数 * 定时器的重装载值）
@@ -142,14 +142,14 @@ void Stepper_Speed_Ctrl(void)
 //        printf("实际值：%d，目标值：%.0f\r\n", capture_per_unit, pid.target_val); // 打印实际值和目标值
 #endif
    }
-   else
-   {
-       /*停机状态所有参数清零*/
-       last_count = 0;
-       cont_val = 0;
-       pid.actual_val = 0;
-       pid.err = 0;
-       pid.err_last = 0;
-       pid.err_next = 0;
-   }
+//   else
+//   {
+//       /*停机状态所有参数清零*/
+//       last_count = 0;
+//       cont_val = 0;
+//       pid.actual_val = 0;
+//       pid.err = 0;
+//       pid.err_last = 0;
+//       pid.err_next = 0;
+//   }
 }

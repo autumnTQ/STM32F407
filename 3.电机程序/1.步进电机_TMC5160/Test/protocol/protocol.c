@@ -317,11 +317,11 @@ int8_t receiving_process(void)
         case SET_TARGET_CMD:
         {
             int actual_temp = COMPOUND_32BIT(&frame_data[13]); // 得到数据
-            
+
             pid.target_val = actual_temp; // 设置目标值
 
             set_computer_value(SEND_TARGET_CMD, CURVES_CH1, &actual_temp, 1); // 给通道 1 发送目标值
-
+            set_computer_value(SEND_TARGET_CMD, CURVES_CH1, &actual_temp, 1); // 给通道 1 发送目标值
         }
         break;
 
@@ -333,21 +333,21 @@ int8_t receiving_process(void)
 
         case STOP_CMD:
         {
-            //      Set_Stepper_Stop(); // 停止
+            //  Set_Stepper_Stop(); // 停止
         }
         break;
 
         case RESET_CMD:
         {
-//            __set_FAULTMASK(1);//禁止所有的可屏蔽中断
-//            NVIC_SystemReset();//软件复位
+            //            __set_FAULTMASK(1);//禁止所有的可屏蔽中断
+            //            NVIC_SystemReset();//软件复位
         }
         break;
 
         case SET_PERIOD_CMD:
         {
-            uint32_t temp = COMPOUND_32BIT(&frame_data[13]); // 周期数
-                                                             //      SET_BASIC_TIM_PERIOD(temp);                      // 设置定时器周期1~1000ms
+            // uint32_t temp = COMPOUND_32BIT(&frame_data[13]); // 周期数
+            // SET_BASIC_TIM_PERIOD(temp);                      // 设置定时器周期1~1000ms
         }
         break;
 
@@ -367,7 +367,6 @@ int8_t receiving_process(void)
  */
 void set_computer_value(uint8_t cmd, uint8_t ch, void *data, uint8_t num)
 {
-
     uint8_t sum = 0; // 校验和
     num *= 4;        // 一个参数 4 个字节
 
@@ -381,58 +380,21 @@ void set_computer_value(uint8_t cmd, uint8_t ch, void *data, uint8_t num)
     sum = check_sum(0, (uint8_t *)&set_packet, sizeof(set_packet)); // 计算包头校验和
     sum = check_sum(sum, (uint8_t *)data, num);                     // 计算参数校验和
 
-//    uint8_t setpacket[10] = {0};
-//    setpacket[0] = set_packet.head >> 24;
-//    setpacket[1] = set_packet.head >> 16;
-//    setpacket[2] = set_packet.head >> 8;
-//    setpacket[3] = set_packet.head;
-//    
-//    setpacket[4] = set_packet.ch;
-//    
-//    setpacket[5] = set_packet.len >> 24;
-//    setpacket[6] = set_packet.len >> 16;
-//    setpacket[7] = set_packet.len >> 8;
-//    setpacket[8] = set_packet.len;
-//    
-//    setpacket[9] = set_packet.cmd;
-    
-
     b485Send(1);
-//    for (int i = 0; i < sizeof(setpacket); i++)
-//    {
-//        USART_SendData(USART1, setpacket[i]);
-//        while (USART_GetFlagStatus(USART1, USART_FLAG_TC) != SET)
-//            ;
-//    }
-//    for (int i = 0; i < num; i++)
-//    {
-//        USART_SendData(USART1, *((uint8_t *)data + i));
-//        while (USART_GetFlagStatus(USART1, USART_FLAG_TC) != SET)
-//            ;
-//    }
-
-//    for (int i = 0; i < sizeof(sum); i++)
-//    {
-//        USART_SendData(USART1, sum);
-//        while (USART_GetFlagStatus(USART1, USART_FLAG_TC) != SET)
-//            ;
-//    }
-    usart1_senddata((uint8_t *)&set_packet, sizeof(set_packet));    // 发送数据头
-    usart1_senddata((uint8_t *)data, num);                          // 发送参数
-    usart1_senddata((uint8_t *)&sum, sizeof(sum));                  // 发送校验和
-
+    usart1_senddata((uint8_t *)&set_packet, sizeof(set_packet)); // 发送数据头
+    usart1_senddata((uint8_t *)data, num);                       // 发送参数
+    usart1_senddata((uint8_t *)&sum, sizeof(sum));               // 发送校验和
     b485Send(0);
 }
 
-
-void usart1_senddata(u8*data, u8 len)
+void usart1_senddata(u8 *data, u8 len)
 {
     u8 i;
-    for(i=0;i<len;i++)
+    for (i = 0; i < len; i++)
     {
-        while(USART_GetFlagStatus(USART1,USART_FLAG_TC)==RESET); 
-        USART_SendData(USART1,data[i]);   
+        while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET)
+            ;
+        USART_SendData(USART1, data[i]);
     }
-
-}                        
+}
 /**********************************************************************************************/

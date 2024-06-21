@@ -705,38 +705,37 @@ void USART1_IRQHandler(void)
 	u16 BUFSIZE = 256; // 接收数据字节最大
 	u16 t = 0;
 
-	Status = USART_GetITStatus(USART1, USART_IT_TXE);	// 发送数据寄存器空中断
-	Status1 = USART_GetITStatus(USART1, USART_IT_TC);	// 发送数据完成中断
+//	Status = USART_GetITStatus(USART1, USART_IT_TXE);	// 发送数据寄存器空中断
+//	Status1 = USART_GetITStatus(USART1, USART_IT_TC);	// 发送数据完成中断
 	Status2 = USART_GetITStatus(USART1, USART_IT_RXNE); // 接收数据寄存器非空中断
-	Status4 = USART_GetITStatus(USART1, USART_IT_IDLE); // 总线空闲标志
-	if (Status == SET)									// 发送寄存器空中断
-	{
-		USART_ClearFlag(USART1, USART_FLAG_TXE);
-		USART_ClearITPendingBit(USART1, USART_IT_TXE);
-	}
-	//--------------------------------------//
-	if (Status1 == SET) // 发送完成中断
-	{
-		USART_ClearFlag(USART1, USART_FLAG_TC);
-		USART_ClearITPendingBit(USART1, USART_IT_TC);
+    
+//	if (Status == SET)									// 发送寄存器空中断
+//	{
+//		USART_ClearFlag(USART1, USART_FLAG_TXE);
+//		USART_ClearITPendingBit(USART1, USART_IT_TXE);
+//	}
+//	//--------------------------------------//
+//	if (Status1 == SET) // 发送完成中断
+//	{
+//		USART_ClearFlag(USART1, USART_FLAG_TC);
+//		USART_ClearITPendingBit(USART1, USART_IT_TC);
 
-		// if (sendPosi < sendCount - 1)
-		// {
-		// 	sendPosi++;
-		// 	t = sendBuf[sendPosi];
-		// 	USART_SendData(USART1, t); // 发送一个字节
-		// }
-		// else
+//		// if (sendPosi < sendCount - 1)
+//		// {
+//		// 	sendPosi++;
+//		// 	t = sendBuf[sendPosi];
+//		// 	USART_SendData(USART1, t); // 发送一个字节
+//		// }
+//		// else
 		// {
 		// 	receCount = 0; // 清接收地址偏移寄存器
 		// 	checkoutError = 0;
 		// 	b485Send(0); // 发送完成后将485设为接收
 		// }
-	}
+//	}
 	//-----------------------------------//
 	if (Status2 == SET) // 接收数据寄存器非空中断
 	{
-
 		uint8_t Res;
 		if (USART_GetITStatus(USART1, USART_IT_RXNE) != RESET) // 接收中断(接收到的数据必须是0x0d 0x0a结尾)
 		{
@@ -801,11 +800,5 @@ void USART1_IRQHandler(void)
 		// }
 		// UARTU1_RX_bit = 1; // UARTU接收数据查询标志位
 		// 				   // checkComm0Modbus();	//查询UART数据
-	}
-	//---------------------------------------//
-	if (Status4 == SET) // 总线空闲标志
-	{
-		USART_ClearFlag(USART1, USART_FLAG_IDLE);
-		USART_ClearITPendingBit(USART1, USART_IT_IDLE);
 	}
 }
